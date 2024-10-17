@@ -1,6 +1,23 @@
 package ms.parade.interfaces.concert;
 
-import java.util.List;
+import java.time.LocalDate;
 
-public record ConcertResponse(long concertId, List<String> availableDates) {
+import ms.parade.domain.concert.ConcertScheduleInfo;
+
+public record ConcertResponse(
+    long id,
+    long concertId,
+    int allSeats,
+    int availableSeats,
+    LocalDate performanceDate
+) {
+    public ConcertResponse(ConcertScheduleInfo concertScheduleInfo) {
+        this(
+            concertScheduleInfo.id(),
+            concertScheduleInfo.concertId(),
+            concertScheduleInfo.allSeats(),
+            concertScheduleInfo.availableSeats(),
+            concertScheduleInfo.performanceDate()
+        );
+    }
 }

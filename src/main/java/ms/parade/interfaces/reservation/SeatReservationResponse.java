@@ -1,4 +1,8 @@
 package ms.parade.interfaces.reservation;
 
-public record SeatReservationResponse(String uuid) {
+import ms.parade.application.reservation.SeatReservationResult;
+
+public record SeatReservationResponse(
+    SeatReservationResult seatReservationResult
+) {
 }
