@@ -40,6 +40,15 @@ public class SeatEntity {
         }
     }
 
+    public static SeatEntity from(SeatParams seatParams) {
+        SeatEntity seatEntity = new SeatEntity();
+        seatEntity.scheduleId = seatParams.scheduleId();
+        seatEntity.name = seatParams.name();
+        seatEntity.price = seatParams.price();
+        seatEntity.status = seatParams.status();
+        return seatEntity;
+    }
+
     public static Seat to(SeatEntity seatEntity) {
         return new Seat(
             seatEntity.id,

@@ -34,7 +34,7 @@ public class AuthInterceptor implements HandlerInterceptor {
                 new UsernamePasswordAuthenticationToken(queueTokenInfo.queueToken().userId(), null, null);
             SecurityContextHolder.getContext().setAuthentication(authentication);
             return true;
-        } catch (NumberFormatException | IllegalStateException e) {
+        } catch (IllegalArgumentException | IllegalStateException e) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return false;
         }

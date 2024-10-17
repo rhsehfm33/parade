@@ -35,4 +35,11 @@ public class ConcertRepositoryImpl implements ConcertRepository {
         concertScheduleEntity = concertScheduleJpaRepository.save(concertScheduleEntity);
         return ConcertScheduleEntity.to(concertScheduleEntity);
     }
+
+    @Override
+    public ConcertSchedule saveSchedule(ConcertScheduleParams concertScheduleParams) {
+        ConcertScheduleEntity concertScheduleEntity = ConcertScheduleEntity.from(concertScheduleParams);
+        concertScheduleEntity = concertScheduleJpaRepository.save(concertScheduleEntity);
+        return ConcertScheduleEntity.to(concertScheduleEntity);
+    }
 }

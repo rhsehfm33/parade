@@ -30,6 +30,15 @@ public class ConcertScheduleEntity {
 
     private LocalDate performanceDate;
 
+    public static ConcertScheduleEntity from(ConcertScheduleParams concertScheduleParams) {
+        ConcertScheduleEntity concertScheduleEntity = new ConcertScheduleEntity();
+        concertScheduleEntity.concertId = concertScheduleParams.concertId();
+        concertScheduleEntity.allSeats = concertScheduleParams.allSeats();
+        concertScheduleEntity.availableSeats = concertScheduleParams.availableSeats();
+        concertScheduleEntity.performanceDate = concertScheduleParams.performanceDate();
+        return concertScheduleEntity;
+    }
+
     public static ConcertSchedule to(ConcertScheduleEntity concertScheduleEntity) {
         return new ConcertSchedule(
             concertScheduleEntity.id,

@@ -40,4 +40,10 @@ public class SeatRepositoryImpl implements SeatRepository {
         seatJpaRepository.save(seatEntity);
         return SeatEntity.to(seatEntity);
     }
+
+    @Override
+    public Seat save(SeatParams seatParams) {
+        SeatEntity seatEntity = seatJpaRepository.save(SeatEntity.from(seatParams));
+        return SeatEntity.to(seatEntity);
+    }
 }

@@ -25,7 +25,7 @@ public class PointController {
         return ResponseEntity.ok(new UserPointResponse(userId, point));
     }
 
-    @PostMapping("/protected/users/{userId}/point")
+    @PostMapping("/protected/users/point")
     ResponseEntity<UserPointResponse> chargeUserPoint(
         Authentication authentication, @RequestBody UserPointRequest userPointRequest
     ) {
