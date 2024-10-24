@@ -3,7 +3,9 @@ package ms.parade.integration.application.reservation;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.time.LocalDate;
-import java.util.concurrent.CountDownLatch;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -15,7 +17,6 @@ import org.springframework.test.annotation.DirtiesContext;
 
 import ms.parade.application.reservation.ReservationFacade;
 import ms.parade.domain.concert.ConcertRepository;
-import ms.parade.domain.concert.ConcertSchedule;
 import ms.parade.domain.seat.Seat;
 import ms.parade.domain.seat.SeatRepository;
 import ms.parade.domain.seat.SeatStatus;
@@ -40,7 +41,7 @@ public class ReservationFacadeWholeTest {
     private ReservationFacade reservationFacade;
 
     @Test
-    public void reserveSeat_5TimesAtOnce_OnlyOneReservation() throws InterruptedException {
+    public void reserveSeat_100TimesAtOnce_OnlyOneReservation() throws InterruptedException {
         final int THREAD_COUNT = 100;
 
         // 사용자 데이터 설정
@@ -56,33 +57,33 @@ public class ReservationFacadeWholeTest {
         // 스케쥴 데이터 설정
         ConcertScheduleParams concertScheduleParams = new ConcertScheduleParams(
             1, 50, 50, LocalDate.now());
-        ConcertSchedule concertSchedule = concertRepository.saveSchedule(concertScheduleParams);
+        concertRepository.saveSchedule(concertScheduleParams);
 
         // 데이터 세팅 완료
-        // 테스트 준비
-        CountDownLatch endLatch = new CountDownLatch(THREAD_COUNT);
 
         // 테스트 성공, 실패 카운트 기록
         AtomicInteger successCount = new AtomicInteger(0);
         AtomicInteger failureCount = new AtomicInteger(0);
         ExecutorService executorService = Executors.newFixedThreadPool(THREAD_COUNT);
+
+        List<Callable<Void>> tasks = new ArrayList<>();
         for (int i = 1; i <= THREAD_COUNT; i++) {
             long userId = i;
-            executorService.submit(() -> {
+            tasks.add(() -> {
                 try {
                     reservationFacade.reserveSeat(userId, seat.id());
                     successCount.incrementAndGet();
                 } catch (IllegalStateException e) {
                     failureCount.incrementAndGet();
                     System.err.println(e);
-                } finally {
-                    endLatch.countDown();
                 }
+                return null;
             });
         }
+        // 모든 작업을 동시에 실행하고 모든 작업이 완료될 때까지 대기
+        executorService.invokeAll(tasks);
 
-        endLatch.await();
-
+        // 결과 검증
         assertEquals(1, successCount.get());
         assertEquals(THREAD_COUNT - 1, failureCount.get());
     }
