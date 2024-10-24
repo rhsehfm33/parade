@@ -1,4 +1,4 @@
-package ms.parade.interfaces.common;
+package ms.parade.interfaces.common.interceptor;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;

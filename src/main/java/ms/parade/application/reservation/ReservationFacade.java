@@ -28,13 +28,13 @@ public class ReservationFacade {
     @Transactional
     public SeatReservationResult reserveSeat(long userId, long seatId) {
         Seat seat = seatService.findByIdForUpdate(seatId).orElseThrow(
-            () -> new IllegalArgumentException("Seat id[" + seatId + "]는 존재하지 않습니다.")
+            () -> new EntityNotFoundException("SEAT_NOT_EXIST; Seat id[" + seatId + "]는 존재하지 않습니다.")
         );
         userService.findById(userId).orElseThrow(
-            () -> new EntityNotFoundException("사용자 정보가 잘못됐습니다.")
+            () -> new EntityNotFoundException("USER_NOT_FOUND; 해당 사용자는 존재하지 않습니다.")
         );
         if (SeatStatus.BOOKED.equals(seat.status())) {
-            throw new IllegalStateException("Seat id[" + seatId + "]는 이미 예약됐습니다.");
+            throw new IllegalStateException("SEAT_ALREADY_RESERVED; Seat id[" + seatId + "]는 이미 예약됐습니다.");
         }
 
         seat = seatService.updateStatus(seatId, SeatStatus.BOOKED);

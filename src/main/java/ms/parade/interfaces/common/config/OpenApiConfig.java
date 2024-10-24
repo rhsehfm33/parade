@@ -1,4 +1,4 @@
-package ms.parade.interfaces.common;
+package ms.parade.interfaces.common.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

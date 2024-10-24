@@ -34,22 +34,22 @@ public class PaymentFacade {
     public SeatPayment payForSeat(long userId, long reservationId) {
         // 예약 완료시키기
         SeatReservation seatReservation = seatReservationService.findByIdForUpdate(reservationId).orElseThrow(
-            () -> new EntityNotFoundException("존재하지 않는 예약입니다.")
+            () -> new EntityNotFoundException("RESERVATION_NOT_EXIST; 존재하지 않는 예약입니다.")
         );
         if (seatReservation.userId() != userId) {
-            throw new IllegalArgumentException("해당 예약에 대한 권한이 없습니다.");
+            throw new IllegalArgumentException("USER_NOT_MATCHING; 해당 예약에 대한 권한이 없습니다.");
         }
         if (!ReservationStatus.PAYING.equals(seatReservation.status())) {
-            throw new IllegalArgumentException("결제할 수 없는 예약 건입니다.");
+            throw new IllegalArgumentException("NOT_RESERVED; 결제할 수 없는 예약 건입니다.");
         }
         seatReservationService.updateStatus(seatReservation.id(), ReservationStatus.COMPLETE);
 
         // 좌석 예약 상태인지 체크
         Seat seat = seatService.findByIdForUpdate(seatReservation.seatId()).orElseThrow(
-            () -> new EntityNotFoundException("존재하지 않는 좌석입니다.")
+            () -> new EntityNotFoundException("SEAT_NOT_EXIST; 존재하지 않는 좌석입니다.")
         );
         if (!seat.status().equals(SeatStatus.BOOKED)) {
-            throw new IllegalArgumentException("예약되지 않은 좌석입니다.");
+            throw new IllegalArgumentException("NOT_RESERVED; 예약되지 않은 좌석입니다.");
         }
 
         // 포인트 차감

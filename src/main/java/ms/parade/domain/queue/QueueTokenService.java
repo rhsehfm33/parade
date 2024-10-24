@@ -37,7 +37,7 @@ public class QueueTokenService {
 
     public QueueTokenInfo getById(long uuid) {
         QueueToken queueToken = queueTokenRepository.findById(uuid).orElseThrow(
-            () -> new IllegalArgumentException("No token found for uuid: " + uuid)
+            () -> new IllegalArgumentException("UUID_NOT_EXIST; No token found for uuid: " + uuid)
         );
         int order = queueTokenRepository.getWaitOrderByTime(queueToken.createdAt());
         return new QueueTokenInfo(queueToken, order + 1);
